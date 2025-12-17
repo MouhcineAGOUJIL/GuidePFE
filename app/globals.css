@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply border-gray-200;
+  }
+  body {
+    @apply bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 min-h-screen;
+  }
+}
+
+@layer utilities {
+  .page-shadow {
+    box-shadow: 
+      0 10px 25px -5px rgba(0, 0, 0, 0.1),
+      0 8px 10px -6px rgba(0, 0, 0, 0.1),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+  }
+  
+  .book-page {
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+  }
+  
+  .page-flip {
+    transform-origin: left center;
+  }
+  
+  .perspective-1200 {
+    perspective: 1200px;
+  }
+}
+
