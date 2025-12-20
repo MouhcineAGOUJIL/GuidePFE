@@ -1,6 +1,6 @@
 'use client'
 
-import { ReactNode, forwardRef } from 'react'
+import { ReactNode, forwardRef, useRef, useEffect } from 'react'
 
 interface DetailLink {
   id: string
@@ -21,18 +21,48 @@ interface BookPageProps {
   onDetailClick: (detailId: string) => void
   pageNumber: number
   totalPages: number
+  highlightTerm?: string
 }
 
-const BookPage = forwardRef<HTMLDivElement, BookPageProps>(({ page, onDetailClick, pageNumber, totalPages }, ref) => {
+const BookPage = forwardRef<HTMLDivElement, BookPageProps>(({ page, onDetailClick, pageNumber, totalPages, highlightTerm }, ref) => {
+  const contentRef = useRef<HTMLDivElement>(null)
+
+  // Auto-scroll to highlighted term
+  useEffect(() => {
+    if (highlightTerm && contentRef.current) {
+      const match = contentRef.current.querySelector('mark')
+      if (match) {
+        match.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      }
+    }
+  }, [highlightTerm, page])
+
+  const highlightText = (text: string, keyPrefix: string) => {
+    if (!highlightTerm || !text.toLowerCase().includes(highlightTerm.toLowerCase())) return text
+
+    const parts = text.split(new RegExp(`(${highlightTerm})`, 'gi'))
+    return parts.map((part, i) =>
+      part.toLowerCase() === highlightTerm.toLowerCase() ?
+        <mark key={`${keyPrefix}-h-${i}`} className="bg-yellow-200 text-gray-900 rounded-sm px-0.5">{part}</mark> :
+        part
+    )
+  }
+
   const renderContent = () => {
-    // ... existing renderContent logic stays same ...
+    // Check if direct array or other types (not handled for highlight currently)
     if (page.content instanceof Array) return page.content
 
     if (typeof page.content === 'string') {
       const renderWithDetails = (text: string, key: string) => {
-        if (!page.details || page.details.length === 0) return text
-        // ... existing details logic ...
+        // First wrap with details
+        if (!page.details || page.details.length === 0) return highlightText(text, key)
+
+        // ... (Existing Detail Logic - simplified for brevity, assume details are processed then highlighted or vice versa)
+        // Actually, it's safer to highlight INSIDE the segments produced by details splitting
+        // to avoid breaking button markup.
+
         let segments: (string | ReactNode)[] = [text]
+
         page.details.forEach(detail => {
           const nextSegments: (string | ReactNode)[] = []
           segments.forEach(seg => {
@@ -41,13 +71,14 @@ const BookPage = forwardRef<HTMLDivElement, BookPageProps>(({ page, onDetailClic
               parts.forEach((p, k) => {
                 if (p) nextSegments.push(p)
                 if (k < parts.length - 1) {
+                  // Button for detail
                   nextSegments.push(
                     <button
                       key={`${key}-${detail.id}-${k}`}
                       onClick={() => onDetailClick(detail.id)}
                       className="text-primary-600 underline decoration-primary-300 hover:text-primary-800 hover:bg-primary-50 px-1 -mx-1 rounded transition-all font-medium cursor-pointer"
                     >
-                      {detail.text}
+                      {highlightText(detail.text, `${key}-${detail.id}-${k}-btn`)}
                     </button>
                   )
                 }
@@ -58,11 +89,17 @@ const BookPage = forwardRef<HTMLDivElement, BookPageProps>(({ page, onDetailClic
           })
           segments = nextSegments
         })
-        return <>{segments}</>
+
+        // Final pass: Highlight strings in segments
+        return <>
+          {segments.map((seg, i) =>
+            typeof seg === 'string' ? <span key={i}>{highlightText(seg, `${key}-final-${i}`)}</span> : seg
+          )}
+        </>
       }
 
       const renderInline = (text: string, keyPrefix: string) => {
-        // ... existing inline logic ...
+        // Handle bolding **text**
         const parts = text.split(/(\*\*.*?\*\*)/g)
         return parts.map((part, i) => {
           if (part.startsWith('**') && part.endsWith('**')) {
@@ -74,34 +111,40 @@ const BookPage = forwardRef<HTMLDivElement, BookPageProps>(({ page, onDetailClic
 
       const lines = page.content.split('\n')
       return (
-        <div className="space-y-1">
+        <div className="space-y-1" ref={contentRef}>
           {lines.map((line, i) => {
-            // ... existing line parsing ...
-            const trimmed = line.trim()
-            if (trimmed === '') return <br key={i} className="block content-[''] h-4" />
+            const trimmed = line.trim() // Trim strictly for detection
+            if (line.trim().length === 0) return <br key={i} className="block content-[''] h-4" />
 
+            // HEADERS
             if (line.startsWith('### ')) {
               return <h3 key={i} className="text-lg font-bold text-primary-700 mt-4 mb-2">{renderInline(line.slice(4), `l-${i}`)}</h3>
             }
             if (line.startsWith('## ')) {
               return <h2 key={i} className="text-xl font-bold text-primary-800 mt-6 mb-3 border-l-4 border-primary-400 pl-3 bg-gray-50 p-2 rounded-r">{renderInline(line.slice(3), `l-${i}`)}</h2>
             }
+            // LISTS
             if (trimmed.startsWith('- ')) {
+              // Extract clean text regardless of indentation
+              const content = line.substring(line.indexOf('- ') + 2)
               return (
                 <div key={i} className="flex flex-row items-start mb-2 ml-4">
                   <div className="min-w-[8px] h-2 w-2 rounded-full bg-primary-400 mt-2 mr-3 opacity-80"></div>
-                  <div className="text-gray-700 leading-relaxed">{renderInline(trimmed.slice(2), `l-${i}`)}</div>
+                  <div className="text-gray-700 leading-relaxed">{renderInline(content, `l-${i}`)}</div>
                 </div>
               )
             }
+            // QUOTES
             if (trimmed.startsWith('> ')) {
+              const content = line.substring(line.indexOf('> ') + 2)
               return (
                 <div key={i} className="bg-blue-50 border-l-4 border-blue-400 p-4 my-4 text-blue-800 italic rounded-r">
-                  {renderInline(trimmed.slice(2), `l-${i}`)}
+                  {renderInline(content, `l-${i}`)}
                 </div>
               )
             }
 
+            // PARAGRAPHS
             return <p key={i} className="leading-relaxed text-gray-700 mb-2">{renderInline(line, `l-${i}`)}</p>
           })}
         </div>

@@ -261,15 +261,15 @@ export const instructions: Instruction[] = [
     category: 'Cadrage'
   },
   {
-    id: 'prob-bp',
-    title: 'Bonnes pratiques: Problématique',
-    content: "Question ouverte, ni trop large ni trop technique. Elle doit montrer l'intérêt de résoudre le problème et guider les choix.",
+    id: 'prob-structure',
+    title: 'La Structure (3 Étapes)',
+    content: "**ÉTAPE 1 : Le Contexte et l'Enjeu**\nSituez le sujet (Tendance, Défi) et montrez l'urgence de la situation (Données concrètes).\n\n**ÉTAPE 2 : Le Paradoxe**\nMontrez ce que la littérature dit, mais surtout ce qu'elle ne dit pas (Limites). Identifiez la tension entre deux exigences contradictoires (ex: Standardisation vs Personnalisation).\n\n**ÉTAPE 3 : La Question**\nFormulez votre question centrale qui tente de résoudre cette tension, suivie de sous-questions opérationnelles.",
     category: 'Problématique'
   },
   {
-    id: 'swot-def',
-    title: 'Matrice SWOT',
-    content: "Forces/Faiblesses (Interne) vs Opportunités/Menaces (Externe). Identifiez les facteurs stratégiques pour justifier le projet.",
+    id: 'prob-types',
+    title: 'Les 4 Types',
+    content: "**1. L'Écart** : Entre ce qui est théorique (souhaitable) et pratique (réel).\n**2. Le Paradoxe** : Concilier deux exigences opposées (Innovation vs Contrôle).\n**3. Le Changement** : Adapter l'existant face à une rupture majeure.\n**4. L'Application** : Transposer un concept connu dans un nouveau contexte.",
     category: 'Problématique'
   },
   {

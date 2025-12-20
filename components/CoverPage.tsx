@@ -23,8 +23,7 @@ const CoverPage = forwardRef<HTMLDivElement, CoverPageProps>(({ data, onDetailCl
             {/* Logos Header */}
             <div className="w-full flex justify-between items-start mb-20 mt-8">
                 <div className="flex flex-col items-center w-1/3">
-                    <img src="/images/esi_logo.png" alt="ESI Logo" className="h-16 md:h-20 object-contain mb-2" />
-                    <div className="text-[0.6rem] uppercase tracking-wider text-gray-600 font-semibold">École des Sciences de l'Information</div>
+                    <img src="/images/esi_logo.jpg" alt="ESI Logo" className="h-16 md:h-20 object-contain mb-2" />
                 </div>
                 <div className="flex flex-col items-center w-1/3">
                     {/* Placeholder for Company/Partner Logo */}

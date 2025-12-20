@@ -21,11 +21,12 @@ export const part1: ReportPage[] = [
 
     // --- CHAPITRE 2 : PROBLEMATIQUE & SWOT ---
     {
-        title: '2. La Problématique & SWOT',
-        content: "La problématique est la question centrale qui va guider tout le rapport.\n\n### Formulation\nElle découle du problème observé et se formule généralement sous forme d'une **question ouverte**.\n\n### Analyse SWOT\nElle aide à formuler une problématique réaliste en analysant le contexte :\n- **Forces (Strengths)** : Atouts internes.\n- **Faiblesses (Weaknesses)** : Freins internes.\n- **Opportunités (Opportunities)** : Facteurs externes positifs.\n- **Menaces (Threats)** : Facteurs externes négatifs.",
+        title: '2. La Problématique',
+        content: "Une problématique se construit selon une logique rigoureuse en **3 étapes** :\n\n### ÉTAPE 1 : Le Contexte et l'Enjeu\n**Structure** : \"Dans un contexte de [tendance], le domaine de [domaine] fait face à [défi]. L'enjeu principal réside dans [enjeu].\"\n\n> **Exemple** : \"Dans un contexte de digitalisation accélérée... cette double contrainte place les conseillers dans une situation paradoxale où ils doivent à la fois accélérer et sécuriser leurs processus.\"\n\n### ÉTAPE 2 : L'État des Connaissances et le Paradoxe\n**Structure** : \"Les recherches existantes ont montré [ce que l'on sait]. Cependant, elles présentent des limites [critique]. On observe ainsi une tension entre [aspect A] et [aspect B].\"\n\n> **Exemple** : \"La littérature sur l'automatisation (Smith, 2020)... démontre ses bénéfices... Néanmoins, ces études négligent la dimension relationnelle... Se crée ainsi une tension entre standardisation et personnalisation.\"\n\n### ÉTAPE 3 : La Question de Recherche\n**Structure** : \"Face à ce constat, notre recherche s'interroge : Comment [action] peut-il permettre de [résoudre tension] ?\"\n\n> **Exemple** : \"Dans quelle mesure une plateforme hybride... peut-elle optimiser la gestion patrimoniale sans déshumaniser le conseil ?\"\n\n### 🔍 Les 4 Types de Problématiques\n1. **L'Écart** : Théorie vs Pratique.\n2. **Le Paradoxe** : Innovation vs Contrôle.\n3. **Le Changement** : Adaptation face à une rupture.\n4. **L'Application** : Transposition d'un concept.",
         details: [
-            { id: 'prob-bp', text: 'Formulation' },
-            { id: 'swot-def', text: 'Analyse SWOT' }
+            { id: 'prob-structure', text: '3 étapes' },
+            { id: 'prob-types', text: '4 Types de Problématiques' },
+            { id: 'prob-structure', text: 'situation paradoxale' }
         ]
     },
 

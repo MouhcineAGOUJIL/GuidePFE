@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { AnimatePresence } from 'framer-motion'
 import HTMLFlipBook from 'react-pageflip'
-import { ChevronLeft, ChevronRight, BookOpen } from 'lucide-react'
+import { ChevronLeft, ChevronRight, BookOpen, Search } from 'lucide-react'
 import BookPage from './BookPage'
 import CoverPage from './CoverPage'
 import InstructionsSection from './InstructionsSection'
@@ -14,6 +14,50 @@ export default function BookViewer() {
   const [totalPages, setTotalPages] = useState(0)
   const [showInstructions, setShowInstructions] = useState(false)
   const [selectedDetail, setSelectedDetail] = useState<string | null>(null)
+  const [searchQuery, setSearchQuery] = useState('')
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!searchQuery.trim()) return
+
+    // Find next page containing query
+    // Start searching from next page
+    const query = searchQuery.toLowerCase()
+    let foundIndex = -1
+
+    // Search from current page + 1 to end
+    for (let i = currentPage; i < reportPages.length; i++) {
+      // Since reportPages doesn't include cover, index 0 in reportPages is actually Page 1 in FlipBook (if cover is index 0)
+      // FlipBook pages: 0=Cover, 1=ReportPage[0], 2=ReportPage[1]...
+      // So checking reportPages[i] corresponds to FlipBook index i+1?
+      // Let's verify data content.
+      const page = reportPages[i]
+      const contentStr = typeof page.content === 'string' ? page.content : ''
+      // Check title and content
+      if (page.title.toLowerCase().includes(query) || contentStr.toLowerCase().includes(query)) {
+        foundIndex = i + 1 // Convert to FlipBook index (Cover is 0)
+        break
+      }
+    }
+
+    // If not found, wrap around (start from 0)
+    if (foundIndex === -1) {
+      for (let i = 0; i < currentPage; i++) {
+        const page = reportPages[i]
+        const contentStr = typeof page.content === 'string' ? page.content : ''
+        if (page.title.toLowerCase().includes(query) || contentStr.toLowerCase().includes(query)) {
+          foundIndex = i + 1
+          break
+        }
+      }
+    }
+
+    if (foundIndex !== -1 && bookRef.current) {
+      bookRef.current.pageFlip().flip(foundIndex)
+    } else {
+      alert('Texte non trouvé')
+    }
+  }
 
   const bookRef = useRef<any>(null)
 
@@ -129,6 +173,20 @@ export default function BookViewer() {
 
         <div className="w-px h-6 bg-gray-300 mx-2"></div>
 
+        {/* Search Bar */}
+        <form onSubmit={handleSearch} className="flex items-center gap-2 bg-gray-50 rounded-full px-3 py-1.5 border border-gray-200 focus-within:border-primary-500 focus-within:ring-2 focus-within:ring-primary-200 transition-all">
+          <Search className="w-4 h-4 text-gray-400" />
+          <input
+            type="text"
+            placeholder="Rechercher..."
+            className="bg-transparent border-none focus:outline-none text-sm w-24 sm:w-32 text-gray-700"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </form>
+
+        <div className="w-px h-6 bg-gray-300 mx-2"></div>
+
         <button
           onClick={() => setShowInstructions(true)}
           className="px-4 py-2 bg-primary-600 text-white rounded-full text-sm font-semibold hover:bg-primary-700 transition-colors shadow-md flex items-center gap-2"
@@ -171,6 +229,7 @@ export default function BookViewer() {
                 onDetailClick={handleDetailClick}
                 pageNumber={index + 1}
                 totalPages={reportPages.length}
+                highlightTerm={searchQuery}
               />
             </div>
           ))}
