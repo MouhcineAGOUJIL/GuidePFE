@@ -319,18 +319,167 @@ La phase “Pendant le PFE” est une période intense, exigeante et formatrice.
         icon: 'Presentation',
         color: 'bg-amber-500',
         content: `
-## 🎤 1. La Règle d'Or : "Storytelling"
-Ta soutenance n'est pas un résumé du rapport. C'est la **bande-annonce** de ton travail.
-*   **L'Accroche** : Commence par une statistique, une anecdote ou le problème concret que tu résous. Capte l'attention en 30 secondes.
-*   **Le Fil Conducteur** : Ton discours doit raconter une histoire. *"On avait ce problème -> On a exploré ces pistes -> On a choisi celle-ci -> Voici le résultat -> Et voici ce qu'on ferait mieux."*
+# Conseils pendant la soutenance
 
-## 🖼 2. Des Slides Impactants
-*   **0 Texte** : Tes slides sont un support visuel, pas un téléprompteur. Mets des schémas, des mots-clés, des captures d'écran.
-*   **Démos Vidéo** : Ne fais **JAMAIS** de démo live risquée sauf si tu maîtrises tout l'environnement. Préfère une vidéo enregistrée (et accélérée x1.5) que tu commentes en direct.
+La soutenance du Projet de Fin d’Études est une étape décisive qui marque l’aboutissement de plusieurs mois de travail. Elle ne consiste pas uniquement à présenter un projet, mais à **démontrer sa compréhension du sujet, sa capacité d’analyse, son esprit critique et ses compétences en communication**. Une soutenance réussie repose autant sur la préparation en amont que sur l’attitude adoptée le jour de la présentation.
 
-## 🥊 3. Le Jury et les Questions
-*   **L'Attitude** : Sois humble mais confiant. Si tu ne connais pas la réponse : *"C'est une excellente question, je ne me suis pas penché sur cet aspect précis, mais mon intuition serait..."*
-*   **Anticipation** : Prépare des "slides de secours" (backup slides) après ta conclusion pour répondre aux questions techniques pointues.`
+---
+
+## 1. Comprendre les objectifs réels de la soutenance
+
+Avant toute chose, l’étudiant doit comprendre ce que le jury attend réellement lors d’une soutenance. Le jury ne cherche pas seulement à vérifier si le projet fonctionne, mais à évaluer :
+
+* La maîtrise globale du sujet
+* La cohérence entre la problématique, la méthodologie et les résultats
+* La capacité à justifier les choix effectués
+* La maturité professionnelle et scientifique de l’étudiant
+
+La soutenance est donc un exercice d’argumentation et de synthèse, et non une simple démonstration technique.
+
+---
+
+## 2. Préparation du support de présentation
+
+Le support de présentation, généralement sous forme de diapositives, joue un rôle central dans la soutenance. Il doit accompagner le discours sans le remplacer.
+
+### 2.1 Structure du support
+
+Un support bien structuré suit une logique claire, permettant au jury de comprendre rapidement le fil conducteur du projet. Il doit présenter successivement le contexte, la problématique, les objectifs, la démarche adoptée, la réalisation, les résultats obtenus, ainsi que les limites et perspectives du travail.
+
+Chaque partie doit être équilibrée afin d’éviter une présentation trop technique ou, à l’inverse, trop théorique.
+
+---
+
+### 2.2 Qualité visuelle et lisibilité
+
+La lisibilité est primordiale. Les diapositives doivent contenir des informations essentielles, formulées de manière concise. Une surcharge d’informations nuit à la compréhension et détourne l’attention du jury.
+
+Il est conseillé d’utiliser :
+
+* Une police lisible
+* Des schémas explicatifs
+* Des figures claires
+
+Le support doit rester sobre, professionnel et cohérent avec le cadre académique.
+
+---
+
+## 3. Préparation du discours oral
+
+La qualité du discours oral est déterminante lors de la soutenance. Un bon projet peut être mal évalué s’il est mal présenté.
+
+### 3.1 Maîtrise du contenu
+
+L’étudiant doit parfaitement connaître son projet. Il ne s’agit pas de réciter un texte appris par cœur, mais d’être capable d’expliquer naturellement :
+
+* Les motivations du projet
+* Les choix techniques
+* Les difficultés rencontrées
+* Les résultats obtenus
+
+Une bonne maîtrise du sujet inspire confiance au jury.
+
+---
+
+### 3.2 Gestion du temps de parole
+
+La soutenance se déroule dans un temps limité. Il est essentiel de s’entraîner afin de respecter la durée imposée. Une présentation trop longue peut frustrer le jury, tandis qu’une présentation trop courte peut donner l’impression d’un travail incomplet.
+
+La gestion du temps démontre la capacité de synthèse de l’étudiant.
+
+---
+
+## 4. Attitude et comportement face au jury
+
+L’attitude adoptée pendant la soutenance influence fortement la perception du jury.
+
+### 4.1 Posture et langage non verbal
+
+L’étudiant doit adopter une posture professionnelle, rester droit, regarder le jury et éviter les gestes excessifs. Le langage non verbal doit refléter la confiance et le sérieux.
+
+Même en situation de stress, une attitude calme et respectueuse est fortement appréciée.
+
+---
+
+### 4.2 Gestion du stress
+
+Le stress est naturel lors d’une soutenance. Il devient problématique lorsqu’il empêche l’étudiant de s’exprimer clairement.
+
+Pour mieux gérer le stress :
+
+* Respirer calmement
+* Parler lentement
+* Se concentrer sur le message à transmettre
+
+Le jury est généralement bienveillant et conscient du contexte académique.
+
+---
+
+## 5. Phase de questions-réponses avec le jury
+
+La phase de questions est souvent perçue comme la plus difficile, mais elle constitue une opportunité de valoriser son travail.
+
+### 5.1 Comprendre l’objectif des questions
+
+Les questions du jury visent à :
+
+* Vérifier la compréhension du projet
+* Évaluer l’esprit critique
+* Tester la capacité de réflexion en temps réel
+
+Elles ne sont pas destinées à piéger l’étudiant, mais à approfondir certains points.
+
+---
+
+### 5.2 Manière de répondre aux questions
+
+Il est important d’écouter attentivement la question jusqu’au bout avant de répondre. Les réponses doivent être claires, structurées et honnêtes.
+
+Lorsqu’un étudiant ne connaît pas la réponse, il est préférable de l’admettre plutôt que de fournir une réponse approximative. Une réponse honnête accompagnée d’une réflexion logique est souvent mieux perçue qu’une réponse incorrecte.
+
+---
+
+### 5.3 Gestion des critiques
+
+Le jury peut formuler des remarques critiques sur le travail. Ces critiques doivent être perçues comme constructives. Il est important de :
+
+* Ne pas se justifier excessivement
+* Reconnaître les limites du projet
+* Montrer une capacité de remise en question
+
+Cette attitude démontre une maturité intellectuelle et professionnelle.
+
+---
+
+## 6. Valorisation du travail réalisé
+
+La soutenance est le moment idéal pour mettre en valeur :
+
+* Les apports personnels
+* Les compétences acquises
+* Les efforts fournis
+
+L’étudiant doit clairement distinguer ce qu’il a réalisé lui-même et ce qui relève de l’existant. La capacité à valoriser son travail sans exagération est un signe de professionnalisme.
+
+---
+
+## 7. Conclusion de la présentation
+
+La conclusion de la soutenance doit être concise et impactante. Elle doit rappeler :
+
+* La problématique initiale
+* Les principaux résultats obtenus
+* Les limites du travail
+* Les perspectives possibles
+
+Une conclusion claire laisse une impression positive au jury.
+
+---
+
+### Conclusion de la phase “Pendant la soutenance”
+
+La soutenance du PFE est bien plus qu’une simple présentation orale. C’est un exercice de communication, de synthèse et de défense intellectuelle. Une bonne préparation, une maîtrise du sujet et une attitude professionnelle permettent de transformer la soutenance en un moment de valorisation du travail accompli. Un étudiant capable d’expliquer, de justifier et de défendre son projet avec clarté maximise ses chances de réussite.
+`
     },
     {
         id: 'phase-4',
