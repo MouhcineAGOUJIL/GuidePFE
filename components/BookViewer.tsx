@@ -141,13 +141,13 @@ export default function BookViewer() {
       <div className="relative z-10 flex items-center justify-center pt-16 pb-8 h-full w-full">
         {/* @ts-ignore - react-pageflip types can be tricky */}
         <HTMLFlipBook
-          width={550}
-          height={733}
+          width={420}
+          height={594}
           size="stretch"
-          minWidth={315}
-          maxWidth={1000}
+          minWidth={300}
+          maxWidth={800}
           minHeight={400}
-          maxHeight={1533}
+          maxHeight={850}
           maxShadowOpacity={0.5}
           showCover={true}
           mobileScrollSupport={true}
