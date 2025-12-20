@@ -1,8 +1,9 @@
 export type ReportPage = {
   title: string
-  content: string
+  content: string | string[]
   image?: string
   imageCaption?: string
+  isTitlePage?: boolean
   details?: {
     id: string
     text: string
@@ -19,16 +20,15 @@ export type Instruction = {
 
 export const coverData = {
   title: "SUJET DE VOTRE PFE : TITRE CONCIS ET PRÉCIS",
-  student: "VOTRE NOM ET PRÉNOM",
-  filiere: "Votre Filière (ex: Ingénierie des Données)",
+  student: "Votre Nom et Prénom",
+  filiere: "Génie Informatique & Données",
   supervisors: [
-    { name: "M. NOM Prénom", role: "Encadrant interne" }
+    { name: "M. le Professeur X", role: "Encadrant Pédagogique" }
   ],
   jury: [
-    { name: "M. NOM Prénom", role: "Président" },
-    { name: "M. NOM Prénom", role: "Encadrant" },
-    { name: "M. NOM Prénom", role: "Rapporteur" },
-    { name: "M. NOM Prénom", role: "Examinateur" }
+    { name: "M. le Président du Jury", role: "Président" },
+    { name: "M. l'Examinateur", role: "Examinateur" },
+    { name: "M. l'Encadrant", role: "Encadrant" }
   ],
   promotion: "2025-2026",
   details: [
@@ -36,283 +36,600 @@ export const coverData = {
   ]
 }
 
+import { part0 } from './parts/part0'
+import { part1 } from './parts/part1'
+import { part2 } from './parts/part2'
+import { part3 } from './parts/part3'
+import { partEnd } from './parts/end'
+
 export const reportPages: ReportPage[] = [
-  {
-    title: 'Notice Bibliographique',
-    content: "La notice bibliographique permet d'identifier rapidement le document. Elle se place généralement au verso de la page de garde ou sur une page dédiée. Elle contient les métadonnées essentielles pour le catalogage : Titre, Auteurs, Mots-clés, Résumé (brève description), Date de publication, et l'organisme d'affiliation.",
-    details: [
-      { id: 'meta-data', text: 'métadonnées essentielles' }
-    ]
-  },
-  {
-    title: 'Dédicaces',
-    content: "Cette page est personnelle et optionnelle. Elle permet à l'étudiant de dédier son travail à des proches (parents, amis, conjoint). Le style est libre, souvent émotionnel, mais doit rester sobre et respectueux. Elle ne doit pas être confondue avec les remerciements.",
-    details: [
-      { id: 'style-dedicace', text: 'style est libre' }
-    ]
-  },
-  {
-    title: 'Remerciements',
-    content: "Les remerciements sont obligatoires et professionnels. Ils s'adressent, dans un ordre hiérarchique, aux personnes ayant contribué techniquement et académiquement au projet : Encadrants, Membres du jury, Responsables de stage en entreprise, et l'école. C'est une marque de maturité professionnelle.",
-    details: [
-      { id: 'ordre-remerciements', text: 'ordre hiérarchique' },
-      { id: 'qui-remercier', text: 'personnes ayant contribué' }
-    ]
-  },
-  {
-    title: 'Résumé & Abstract',
-    content: "Le résumé (en français) et l'abstract (en anglais) sont les parties les plus lues du rapport. Ils doivent synthétiser en 15-20 lignes : le contexte, la problématique, la méthodologie, les résultats principaux et la conclusion. Ils sont suivis d'une liste de mots-clés (4 à 6) pour l'indexation.",
-    details: [
-      { id: 'structure-resume', text: 'synthétiser' },
-      { id: 'mots-cles', text: 'mots-clés' }
-    ]
-  },
-  {
-    title: 'Listes des Tableaux & Figures',
-    content: "Ces listes permettent de retrouver rapidement les éléments visuels du rapport. Chaque figure et tableau doit avoir une légende numérotée (ex: Figure 1: Architecture du système). Ces listes sont générées automatiquement par les outils de traitement de texte (Word/LaTeX).",
-    details: [
-      { id: 'legendes', text: 'légende numérotée' },
-      { id: 'auto-gen', text: 'générées automatiquement' }
-    ]
-  },
-  {
-    title: 'Table des Matières',
-    content: "La table des matières (ou sommaire) reflète la structure logique du rapport. Elle doit être claire, équilibrée (les chapitres doivent avoir des tailles comparables) et détaillée jusqu'au niveau 3 maximum (I.1.a). Elle permet au lecteur de naviguer efficacement.",
-    details: [
-      { id: 'equilibre', text: 'équilibrée' },
-      { id: 'profondeur', text: 'niveau 3 maximum' }
-    ]
-  },
-  {
-    title: 'Introduction Générale',
-    content: "L'introduction générale est la vitrine de votre rapport. Elle doit capter l'attention du lecteur en posant le contexte global. Elle définit clairement la problématique (le 'Pourquoi' du projet) et les objectifs (le 'Quoi'). Elle se termine obligatoirement par l'annonce du plan du rapport, qui guide le lecteur à travers les différents chapitres :\n\n- **Chapitre 1** : Cadre théorique & Méthodologie.\n- **Chapitre 2** : Revue de littérature (Machine Learning & Deep Learning).\n- **Chapitre 3** : Analyse de l'existant & Besoins.\n- **Chapitre 4** : Conception (Modèles ML & GAN).\n- **Chapitre 5** : Réalisation & Implémentation.\n- **Chapitre 6** : Résultats & Comparaison.",
-    details: [
-      { id: 'accroche', text: 'capter l\'attention' },
-      { id: 'annonce-plan', text: 'annonce du plan' },
-      { id: 'structure-chapitres', text: 'différents chapitres' }
-    ]
-  },
-  {
-    title: '1. Cadrage du Projet',
-    content:
-      "Le cadrage est la fondation de tout Projet de Fin d'Études. Il ne s'agit pas seulement de choisir un titre, mais de définir précisément le périmètre du travail. Cette phase repose sur la définition claire du Sujet (titre concis et technique), de l'Objet d'étude (le domaine ou le système visé) et de la Problématique (la question centrale que le PFE doit résoudre). Un bon cadrage garantit que le travail restera focalisé et pertinent.",
-    image: "/images/part1/cadrage.png",
-    imageCaption: "Le triptyque du cadrage : Sujet, Objet, Problématique.",
-    details: [
-      { id: 'titre-consignes', text: 'Sujet' },
-      { id: 'problematique', text: 'Problématique' },
-    ],
-  },
-  {
-    title: '2. Revue de Littérature',
-    content:
-      "La Revue de Littérature (RL) n'est pas une simple liste bibliographique. C'est une analyse critique de l'état de l'art. Elle commence par une recherche systématique sur des bases reconnues (IEEE, ACM, Google Scholar) en utilisant des mots-clés précis. L'objectif est d'atteindre la saturation théorique, c'est-à-dire le point où les nouvelles lectures n'apportent plus de concepts nouveaux majeurs.",
-    image: "/images/part1/recherche.png",
-    imageCaption: "Processus de recherche systématique et outils (Zotero, Mendeley).",
-    details: [
-      { id: 'recherche-systematique', text: 'recherche systématique' },
-      { id: 'saturation', text: 'saturation théorique' },
-    ],
-  },
-  {
-    title: '3. Analyse & Synthèse de la RL',
-    content:
-      "Une fois les sources collectées, il faut passer à l'analyse et à la synthèse. Évitez le résumé 'article par article'. Privilégiez une synthèse thématique qui regroupe les travaux par concepts ou approches. L'analyse doit être critique : évaluez la validité des résultats et identifiez les contradictions. La conclusion de la RL doit impérativement mettre en lumière le 'Gap' (le manque) que votre PFE va combler.",
-    image: "/images/part1/analyse.png",
-    imageCaption: "De la lecture à la synthèse thématique.",
-    details: [
-      { id: 'synthese-thematique', text: 'synthèse thématique' },
-      { id: 'gap', text: 'Gap' },
-    ],
-  },
-  {
-    title: '4. Analyse Documentaire',
-    content:
-      "L'analyse documentaire complète la RL en se focalisant sur des documents 'terrain' ou techniques existants (rapports d'entreprise, documentation technique, normes, données brutes). Contrairement à la RL qui traite de concepts théoriques, l'analyse documentaire aide à comprendre le contexte opérationnel. Elle exige une vérification rigoureuse de l'authenticité et de la fiabilité des sources.",
-    image: "/images/part1/doc-analysis.png",
-    imageCaption: "Sources documentaires : Rapports, Données, Normes.",
-    details: [
-      { id: 'analyse-doc', text: "analyse documentaire" },
-      { id: 'authenticite', text: 'authenticité' },
-    ],
-  },
-  {
-    title: '5. Benchmarking',
-    content:
-      "Le benchmark (ou parangonnage) est une analyse comparative de solutions existantes (environ 3 à 5). L'objectif est de situer votre future solution. La démarche se fait en 3 étapes : 1. Définir les critères de comparaison (coût, performance, fonctionnalités). 2. Collecter les données sur les solutions cibles. 3. Analyser via une matrice comparative pour justifier le choix de votre approche.",
-    image: "/images/part1/benchmark.png",
-    imageCaption: "Matrice de benchmarking : Comparaison multicritère.",
-    details: [
-      { id: 'benchmark-steps', text: 'analyse comparative' },
-      { id: 'criteres', text: 'critères de comparaison' },
-    ],
-  },
-  {
-    title: '6. Conclusion Partie 1',
-    content:
-      "La partie 'Cadrage & Informations de Seconde Main' est l'ancrage de votre PFE. Elle valide que le problème existe, qu'il est pertinent, et que vous connaissez l'état de l'art. Elle mène naturellement à la formulation des hypothèses et au choix de la méthodologie (Partie 2). Sans cette fondation solide, le développement technique risque d'être hors-sujet ou redondant.",
-    image: "/images/part1/conclusion-p1.png",
-    imageCaption: "Du Cadrage à la Méthodologie.",
-    details: [
-      { id: 'hypotheses', text: 'hypothèses' },
-    ],
-  },
+  ...part0,
+  ...part1,
+  ...part2,
+  ...part3,
+  ...partEnd
 ]
 
 export const instructions: Instruction[] = [
+  // --- PARTIE 0 : NOTICE & RESUMES ---
+  {
+    id: 'meta-titre',
+    title: 'Le Titre',
+    content: "Le titre est la première chose que le jury voit. Il doit contenir les technologies clés et le domaine d'application.",
+    category: 'Préambule'
+  },
+  {
+    id: 'meta-resume',
+    title: 'Synthèse',
+    content: "C'est un exercice de style difficile. Résumez 6 mois de travail en 15 lignes. Soyez percutant.",
+    category: 'Préambule'
+  },
+  {
+    id: 'meta-keywords',
+    title: 'Mots-Clés',
+    content: "Ils servent à l'indexation dans les bases de données. Évitez les termes trop génériques comme 'Informatique'.",
+    category: 'Préambule'
+  },
+  {
+    id: 'resume-context',
+    title: 'Contexte',
+    content: "Situez le projet : 'Dans le cadre de la modernisation du SI de l'entreprise X...'.",
+    category: 'Résumé'
+  },
+  {
+    id: 'resume-problem',
+    title: 'Problématique',
+    content: "Quel est le 'caillou dans la chaussure' de l'entreprise qui a justifié votre embauche ?",
+    category: 'Résumé'
+  },
+  {
+    id: 'resume-method',
+    title: 'Méthodologie',
+    content: "Citez la stack technique et la méthode de gestion de projet (Agile/Scrum).",
+    category: 'Résumé'
+  },
+  {
+    id: 'resume-results',
+    title: 'Résultats',
+    content: "Donnez un chiffre clé si possible (Gain de temps, Performance, Nombre d'utilisateurs).",
+    category: 'Résumé'
+  },
+  {
+    id: 'abstract-trans',
+    title: 'Traduction',
+    content: "Une mauvaise traduction décrédibilise le travail. Payez attention aux faux-amis (ex: 'Sensible' ne veut pas dire 'Sensible' mais 'Raissonable' ! 'Sensitive' est le bon mot).",
+    category: 'Abstract'
+  },
+  {
+    id: 'abstract-vocab',
+    title: 'Vocabulaire',
+    content: "Utilisez les termes standards : 'Framework', 'Library', 'Latency', 'Throughput'.",
+    category: 'Abstract'
+  },
+  {
+    id: 'abstract-voice',
+    title: 'Voix Passive',
+    content: "En anglais académique, on dit 'Tests were conducted' plutôt que 'I conducted tests'.",
+    category: 'Abstract'
+  },
+  {
+    id: 'ar-fusha',
+    title: 'Arabe Littéraire',
+    content: "Le rapport est un document officiel. Le dialecte est strictement interdit.",
+    category: 'Résumé Arabe'
+  },
+  {
+    id: 'ar-terms',
+    title: 'Terminologie Arabe',
+    content: "Vérifiez les traductions officielles. Ex: 'Base de données' = 'قاعدة البيانات'.",
+    category: 'Résumé Arabe'
+  },
+  {
+    id: 'ar-rtl',
+    title: 'Direction RTL',
+    content: "Vérifiez que la ponctuation ne 'saute' pas en début de ligne. C'est un bug fréquent lors de l'export PDF.",
+    category: 'Résumé Arabe'
+  },
+  {
+    id: 'abbrev-order',
+    title: 'Ordre Alpha',
+    content: "Une liste non triée est inutilisable pour le lecteur. Utilisez le tri automatique de l'éditeur.",
+    category: 'Listes'
+  },
+  {
+    id: 'abbrev-rule',
+    title: 'Définition',
+    content: "Ne supposez jamais que le lecteur connait un acronyme, même 'courant' comme API.",
+    category: 'Listes'
+  },
+  {
+    id: 'list-auto',
+    title: 'Automatisme',
+    content: "Si vous ajoutez une figure, la liste doit se mettre à jour toute seule (Clic droit > Mettre à jour).",
+    category: 'Listes'
+  },
+  {
+    id: 'table-naming',
+    title: 'Titre Tableau',
+    content: "Convention standard : Le titre est TOUJOURS au-dessus pour un tableau.",
+    category: 'Listes'
+  },
+  {
+    id: 'fig-naming',
+    title: 'Titre Figure',
+    content: "Convention standard : Le titre est TOUJOURS en-dessous pour une image ou graphique.",
+    category: 'Listes'
+  },
+  {
+    id: 'fig-quality',
+    title: 'Qualité',
+    content: "Une image pixelisée ou illisible donne une impression de négligence immédiate.",
+    category: 'Listes'
+  },
+  {
+    id: 'annex-def',
+    title: 'Contenu Annexe',
+    content: "Ne mettez pas tout le code ! Seulement les extraits pertinents ou les preuves de concept.",
+    category: 'Annexes'
+  },
+  {
+    id: 'annex-num',
+    title: 'Numérotation',
+    content: "Les annexes sont généralement numérotées A, B, C... ou I, II, III... pour ne pas confondre avec les chapitres.",
+    category: 'Annexes'
+  },
+  {
+    id: 'intro-accroche',
+    title: 'L\'Entonnoir',
+    content: "La technique de l'entonnoir : Partez du Monde > Secteur > Entreprise > Projet.",
+    category: 'Introduction'
+  },
+  {
+    id: 'intro-problem',
+    title: 'La Question',
+    content: "Si vous n'avez pas de problématique claire, vous n'avez pas de sujet de PFE, juste une tâche à exécuter.",
+    category: 'Introduction'
+  },
+  {
+    id: 'intro-obj',
+    title: 'Objectifs',
+    content: "Séparez les objectifs techniques (Réaliser une app) des objectifs fonctionnels (Améliorer la vente).",
+    category: 'Introduction'
+  },
+  {
+    id: 'intro-plan',
+    title: 'Le Plan',
+    content: "Le plan annonce la couleur. Il doit dérouler une logique implacable.",
+    category: 'Introduction'
+  },
+
+  // --- ANCIENNES CONSIGNES (Legacy mais utiles) ---
   {
     id: 'meta-data',
-    title: 'Éléments de la Notice',
-    content: "- Titre exact du PFE.\n- Nom(s) et Prénom(s) de l'auteur.\n- Mots-clés (5 max).\n- Résumé court (1 paragraphe).\n- Mention de confidentialité (si applicable).",
+    title: 'Conseils : Notice',
+    content: "Soyez synthétique. Les mots-clés doivent être standards (ex: IEEE Taxinomie). Le résumé doit donner envie de lire le rapport entier.",
     category: 'Préambule'
   },
   {
     id: 'style-dedicace',
-    title: 'Conseils Dédicace',
-    content: "- Restez sobre.\n- Évitez les surnoms trop familiers ou les textes trop longs.\n- Alignement souvent à droite ou centré, en italique.",
+    title: 'Conseils : Dédicace',
+    content: "Restez sobre. Ce n'est pas un discours de mariage. Évitez les surnoms familiers.",
     category: 'Préambule'
   },
   {
     id: 'ordre-remerciements',
-    title: "L'Ordre Protocolaire",
-    content: "1. Directeur de l'école (optionnel mais poli).\n2. Encadrant pédagogique (Professeur).\n3. Encadrant professionnel (Maître de stage).\n4. Membres du jury (pour l'évaluation).\n5. L'équipe d'accueil.",
+    title: 'Conseils : Remerciements',
+    content: "Respectez la hiérarchie : Encadrants > Jury > Entreprise > Proches. N'oubliez personne, c'est politique.",
     category: 'Préambule'
-  },
-  {
-    id: 'qui-remercier',
-    title: "Le Ton des Remerciements",
-    content: "- Utilisez des formules comme 'Je tiens à exprimer ma gratitude...', 'J'adresse mes vifs remerciements...'.\n- Soyez sincère mais formel.",
-    category: 'Préambule'
-  },
-  {
-    id: 'structure-resume',
-    title: "Structure du Résumé",
-    content: "- Contexte : 1 phrase.\n- Problème : 1 phrase.\n- Solution/Approche : 2-3 phrases.\n- Résultats/Gain : 1-2 phrases.\n- Conclusion/Impact : 1 phrase.",
-    category: 'Résumé'
-  },
-  {
-    id: 'mots-cles',
-    title: "Choix des Mots-clés",
-    content: "- Utilisez le vocabulaire technique standard du domaine.\n- Évitez les mots trop génériques (ex: 'Informatique').\n- Préférez 'Machine Learning', 'Microservices', 'Optimisation'.",
-    category: 'Résumé'
-  },
-  {
-    id: 'legendes',
-    title: "Gestion des Légendes",
-    content: "- Figure (Graphique, Schéma, Image) : Légende en DESSOUS.\n- Tableau : Légende au DESSUS.\n- Citez toujours la source si l'image n'est pas de vous.",
-    category: 'Listes'
-  },
-  {
-    id: 'auto-gen',
-    title: "Automatisation",
-    content: "- N'écrivez JAMAIS les listes à la main.\n- Utilisez les styles de titres (Titre 1, Titre 2) pour la TDM.\n- Utilisez 'Insérer une légende' pour les figures.",
-    category: 'Listes'
   },
   {
     id: 'equilibre',
-    title: "Équilibre du Plan",
-    content: "- Évitez un Chapitre 1 de 50 pages et un Chapitre 2 de 5 pages.\n- Essayez d'avoir une structure symétrique (ex: 3 ou 4 grands chapitres).",
-    category: 'Structure'
-  },
-  {
-    id: 'profondeur',
-    title: "Profondeur de la Table",
-    content: "- N'allez pas trop loin dans la numérotation (ex: I.1.a.i.alpha est illisible).\n- Arrêtez-vous au niveau 3 (1.1.1).",
+    title: 'Conseils : Plan',
+    content: "Vos parties doivent être équilibrées. Évitez une partie de 50 pages et une autre de 5. Le niveau de détail 3 (I.1.a) est suffisant.",
     category: 'Structure'
   },
   {
     id: 'accroche',
-    title: "L'Accroche (Hook)",
-    content: "- Commencez par une vérité générale, une statistique choc ou une citation pertinente.\n- Montrez immédiatement l'intérêt du sujet.",
+    title: 'L\'Accroche',
+    content: "Commencez par un fait marquant, un chiffre ou une actualité du domaine pour capter l'intérêt immédiat du lecteur.",
     category: 'Introduction'
   },
   {
     id: 'annonce-plan',
-    title: "L'Annonce du Plan",
-    content: "- Utilisez le futur simple ('Nous commencerons par...', 'Ensuite, nous aborderons...').\n- Évitez les formules lourdes ('Dans un premier temps...').\n- Le plan doit être fluide et logique.",
+    title: 'Annonce du Plan',
+    content: "Utilisez le futur simple : 'Nous verrons...', 'Nous analyserons...'. Évitez 'Dans un premier temps je vais...'.",
     category: 'Introduction'
   },
+
+  // --- PARTIE 1 : CADRAGE & INFO SECONDE MAIN ---
   {
-    id: 'structure-chapitres',
-    title: "Structure du Rapport",
-    content: "- Équilibre : Vos chapitres doivent avoir des volumes comparables.\n- Logique : Du général (Théorie/Contexte) au particulier (Réalisation).\n- Progression : Chaque chapitre doit répondre à une question soulevée par le précédent.",
-    category: 'Introduction'
+    id: 'sujet-bp',
+    title: 'Bonnes pratiques: Sujet',
+    content: "Choisir un thème clair, lié au domaine. Présenter de manière générale sans technique. Montrer l'utilité et l'actualité.",
+    category: 'Cadrage'
   },
   {
-    id: 'titre-consignes',
-    title: 'Le Sujet',
-    content:
-      "- Le titre doit être technique et précis.\n- Évitez les titres trop vagues comme 'Application Web'.\n- Préférez : 'Conception d'une plateforme d'analyse temps réel avec Kafka'.",
-    category: 'Cadrage',
+    id: 'objet-bp',
+    title: 'Bonnes pratiques: Objet',
+    content: "Définir ce qui est réellement étudié. Limiter clairement le périmètre (Inclus/Exclu). Garder une formulation concise.",
+    category: 'Cadrage'
   },
   {
-    id: 'problematique',
-    title: 'La Problématique',
-    content:
-      "- Elle doit être formulée sous forme de question.\n- Elle doit exprimer un besoin ou une lacune.\n- Exemple : 'Comment optimiser la consommation énergétique des réseaux IoT ?'",
-    category: 'Cadrage',
+    id: 'probleme-bp',
+    title: 'Bonnes pratiques: Problème',
+    content: "Décrire la situation réelle qui pose difficulté. S'appuyer sur des faits observés, pas des suppositions. Éviter le vague.",
+    category: 'Cadrage'
   },
   {
-    id: 'recherche-systematique',
-    title: 'Recherche Systématique',
-    content:
-      "- Utilisez des bases académiques (IEEE Xplore, Google Scholar).\n- Utilisez des opérateurs booléens (AND, OR).\n- Priorisez les articles récents (moins de 5 ans).",
-    category: 'Littérature',
+    id: 'prob-bp',
+    title: 'Bonnes pratiques: Problématique',
+    content: "Question ouverte, ni trop large ni trop technique. Elle doit montrer l'intérêt de résoudre le problème et guider les choix.",
+    category: 'Problématique'
   },
   {
-    id: 'saturation',
-    title: 'Saturation Théorique',
-    content:
-      "- Concept clé : vous arrêtez de chercher quand vous ne trouvez plus de nouveaux concepts.\n- Cela prouve que vous avez 'fait le tour' de la question.",
-    category: 'Littérature',
+    id: 'swot-def',
+    title: 'Matrice SWOT',
+    content: "Forces/Faiblesses (Interne) vs Opportunités/Menaces (Externe). Identifiez les facteurs stratégiques pour justifier le projet.",
+    category: 'Problématique'
   },
   {
-    id: 'synthese-thematique',
-    title: 'Synthèse Thématique',
-    content:
-      "- Ne faites pas : Auteur A a dit ça, Auteur B a dit ça.\n- Faites : 'Plusieurs approches existent pour X. L'approche statistique (Auteur A, B) et l'approche neuronale (Auteur C).'\n- C'est vous qui structurez la connaissance.",
-    category: 'Analyse',
+    id: 'q-rech-do',
+    title: 'Ce qu\'il faut mettre',
+    content: "2 à 5 questions claires, précises, liées à la problématique. Elles doivent être exploratoires ou explicatives.",
+    category: 'Questions de Recherche'
   },
   {
-    id: 'gap',
-    title: 'Le Gap (Manque)',
-    content:
-      "- C'est la justification de votre PFE.\n- 'Bien que l'approche X soit performante, elle ne traite pas le cas Y... C'est ce que nous proposons.'",
-    category: 'Analyse',
+    id: 'q-rech-dont',
+    title: 'Ce qu\'il faut éviter',
+    content: "Questions qui ne répondent pas à la problématique, trop techniques, trop vagues ou fermées (Oui/Non).",
+    category: 'Questions de Recherche'
   },
   {
-    id: 'analyse-doc',
+    id: 'obj-smart',
+    title: 'Critères S.M.A.R.T',
+    content: "Spécifique (Clair), Mesurable (Quantifiable), Atteignable (Ressources ok), Réaliste (Utile), Temporel (Date limite).",
+    category: 'Objectifs'
+  },
+  {
+    id: 'obj-verbs',
+    title: 'Verbes d\'action',
+    content: "Utilisez des verbes forts à l'infinitif : Identifier, Analyser, Concevoir, Implémenter, Évaluer, Tester.",
+    category: 'Objectifs'
+  },
+  {
+    id: 'hyp-types',
+    title: 'Types d\'hypothèses',
+    content: "Descriptives (Quoi?), Explicatives (Pourquoi?), Comparatives (Mieux que?), Prédictives (Si... alors...).",
+    category: 'Hypothèses'
+  },
+  {
+    id: 'hyp-bp',
+    title: 'Bonnes Pratiques',
+    content: "Hypothèses claires, testables, basées sur des arguments. Évitez celles impossibles à mesurer ou trop évidentes.",
+    category: 'Hypothèses'
+  },
+  {
+    id: 'rl-def',
+    title: 'Définition RL',
+    content: "Fondement théorique qui légitime le projet. Elle démontre votre expertise et justifie la méthodologie.",
+    category: 'Revue Littérature'
+  },
+  {
+    id: 'rl-gap',
+    title: 'Le GAP',
+    content: "Vide de connaissance ou limite méthodologique actuelle. Votre PFE sert à combler ce vide.",
+    category: 'Revue Littérature'
+  },
+  {
+    id: 'rl-method',
+    title: 'Stratégie de Recherche',
+    content: "Mots-clés, Opérateurs (AND/OR), Sources fiables (Scholar, Thèses). Arrêtez à saturation (plus de nouvelles idées).",
+    category: 'Revue Littérature'
+  },
+  {
+    id: 'doc-analysis',
     title: 'Analyse Documentaire',
-    content:
-      "- Utile pour comprendre le métier de l'entreprise.\n- Sources : Cahiers des charges, manuels utilisateurs, archives de données.\n- Permet de comprendre 'le terrain'.",
-    category: 'Contexte',
+    content: "Critiquez vos sources : Authenticité, Contexte, Auteur. Déconstruisez pour reconstruire selon votre problématique.",
+    category: 'Info 2nde Main'
   },
   {
-    id: 'authenticite',
-    title: 'Authenticité des sources',
-    content:
-      "- Toujours vérifier l'origine d'un document.\n- Est-ce une source primaire (originale) ou secondaire (interprétée) ?\n- Attention aux sources obsolètes.",
-    category: 'Contexte',
+    id: 'bench-steps',
+    title: 'Étapes Benchmark',
+    content: "1. Identifier quoi comparer. 2. Choisir critères. 3. Collecter info (Tableau). 4. Analyser et Conclure (Solution retenue).",
+    category: 'Info 2nde Main'
   },
   {
-    id: 'benchmark-steps',
-    title: 'Méthode de Benchmarking',
-    content:
-      "- Ne choisissez pas des concurrents au hasard.\n- Prenez le leader du marché, un challenger, et une solution open-source.\n- Soyez objectif dans l'analyse.",
-    category: 'Benchmark',
+    id: 'cl-conclusion',
+    title: 'Synthèse',
+    content: "Rappelez le cadre méthodologique posé. Confirmez que la vision est claire pour passer à la réalisation.",
+    category: 'Conclusion'
+  },
+
+
+  // --- PARTIE 2 : REALISATION ---
+  {
+    id: 'col-strat',
+    title: 'Types de données',
+    content: "Mixez les approches : Quantitatif pour la représentativité (Stats), Qualitatif pour la profondeur (Pourquoi?).",
+    category: 'Collecte'
   },
   {
-    id: 'criteres',
-    title: 'Critères de Comparaison',
-    content:
-      "- Définissez-les AVANT de comparer.\n- Exemples : Coût de licence, Compatibilité, Communauté, Performance, Courbe d'apprentissage.",
-    category: 'Benchmark',
+    id: 'col-pop',
+    title: 'Échantillonnage',
+    content: "Qui interroger ? Clients, Experts, Utilisateurs finaux ? La taille de l'échantillon doit être significative.",
+    category: 'Collecte'
   },
   {
-    id: 'hypotheses',
-    title: 'Formulation des Hypothèses',
-    content:
-      "- Une hypothèse est une réponse provisoire à la problématique.\n- Elle sera validée ou infirmée par votre travail technique.\n- 'Nous supposons que l'usage de graphQL améliorera la latence...'",
-    category: 'Conclusion P1',
+    id: 'col-tools',
+    title: 'Support',
+    content: "Testez toujours vos questionnaires (Test pilote) avant de les diffuser massivement pour éviter les ambiguïtés.",
+    category: 'Collecte'
+  },
+  {
+    id: 'col-channels',
+    title: 'Canaux',
+    content: "Adaptez le canal à la cible. Ne faites pas un Google Forms pour un PDG, demandez un entretien.",
+    category: 'Collecte'
+  },
+  {
+    id: 'col-follow',
+    title: 'Monitoring',
+    content: "Suivez le taux de réponse quotidiennement. Relancez après une semaine. Utilisez des incentives si besoin.",
+    category: 'Collecte'
+  },
+  {
+    id: 'col-clean',
+    title: 'Data Cleaning',
+    content: "Supprimez les réponses aberrantes (ex: âge = 999). Une donnée sale faussera toute votre analyse.",
+    category: 'Collecte'
+  },
+  {
+    id: 'ana-method',
+    title: 'Analyse',
+    content: "Ne laissez pas Excel décider. Interprétez chaque graphique. Qu'est-ce que ça veut dire pour le projet ?",
+    category: 'Analyse'
+  },
+  {
+    id: 'ana-pestel',
+    title: 'Analyse Macro',
+    content: "PESTEL : Politique, Economique, Social, Technologique, Environnemental, Légal. Anticipez les contraintes externes.",
+    category: 'Analyse'
+  },
+  {
+    id: 'ana-func',
+    title: 'Le Quoi',
+    content: "Authentification, Gestion des profils, Génération de PDF... Listez toutes les features.",
+    category: 'Analyse'
+  },
+  {
+    id: 'ana-nonfunc',
+    title: 'La Qualité',
+    content: "Performance ( < 2s), Sécurité (GDPR, HTTPS), Maintenabilité (Code propre), Ergonomie (Responsive).",
+    category: 'Analyse'
+  },
+  {
+    id: 'conc-plan',
+    title: 'Analogie',
+    content: "On ne construit pas une maison sans plan d'architecte. Le code sans conception est voué à l'échec (Dette technique).",
+    category: 'Conception'
+  },
+  {
+    id: 'uml-uc',
+    title: 'Use Case',
+    content: "Restez macro. Ne détaillez pas chaque clic. Qui sont les acteurs et quelles sont leurs grandes fonctions ?",
+    category: 'Conception'
+  },
+  {
+    id: 'uml-class',
+    title: 'Class Diagram',
+    content: "Normalisez votre modèle de données (1FN, 2FN, 3FN). Évitez la redondance. C'est le cœur de la performance.",
+    category: 'Conception'
+  },
+  {
+    id: 'uml-seq',
+    title: 'Sequence Diagram',
+    content: "Faites-le pour les cas complexes uniquement. Montrez les appels API, l'authentification, les transactions BDD.",
+    category: 'Conception'
+  },
+  {
+    id: 'conc-arch',
+    title: 'Architecture Logique',
+    content: "N-Tiers (Front/Back/Data), Microservices, Monolithe ? Justifiez selon la complexité et l'équipe.",
+    category: 'Conception'
+  },
+  {
+    id: 'conc-phys',
+    title: 'Architecture Physique',
+    content: "Où est hébergé le code ? Cloud (AWS/Azure) ou On-Premise ? Comment assurez-vous la sécurité (Firewall) ?",
+    category: 'Conception'
+  },
+  {
+    id: 'conc-ui',
+    title: 'Prototypage',
+    content: "Wireframe (Squelette) -> Mockup (Graphisme) -> Prototype (Interactif). 'Le dessin est gratuit', le code coûte cher.",
+    category: 'Conception'
+  },
+  {
+    id: 'tech-matrix',
+    title: 'Choix Rationnel',
+    content: "Comparez les frameworks (ex: React vs Angular) sur des critères objectifs (Courbe d'apprentissage, Performance, Communauté).",
+    category: 'Mise en oeuvre'
+  },
+  {
+    id: 'tech-chal',
+    title: 'Challenges',
+    content: "Ne dites pas 'C'était dur'. Dites 'Le problème X a été résolu par l'approche Y'. Montrez votre capacité de résolution.",
+    category: 'Mise en oeuvre'
+  },
+
+  // --- PARTIE 3 : RESULTATS & DISCUSSION ---
+  {
+    id: 'role-proof',
+    title: 'Preuve',
+    content: "La Partie 3 est votre tribunal. Vous devez convaincre le jury que ça marche avec des pièces à conviction (KPI, Logs).",
+    category: 'Résultats'
+  },
+  {
+    id: 'expect-kpi',
+    title: 'Mesures',
+    content: "Interdiction d'utiliser 'rapide', 'efficace', 'bon'. Utilisez '1.2s', '95%', '0 bugs critiques'.",
+    category: 'Résultats'
+  },
+  {
+    id: 'def-res',
+    title: 'Résultats',
+    content: "C'est le constat. Neutre. Froid. Indiscutable. C'est l'écran de l'oscilloscope ou la sortie de la console.",
+    category: 'Définitions'
+  },
+  {
+    id: 'def-ana',
+    title: 'Analyse',
+    content: "C'est l'explication technique. Pourquoi la courbe monte ? Pourquoi le modèle échoue sur les images floues ?",
+    category: 'Définitions'
+  },
+  {
+    id: 'def-disc',
+    title: 'Discussion',
+    content: "C'est la prise de recul. Est-ce suffisant ? Est-ce mieux qu'avant ? Est-ce industrialisable ?",
+    category: 'Définitions'
+  },
+  {
+    id: 'pres-struct',
+    title: 'Logique',
+    content: "Règle d'or : Un résultat n'existe que s'il répond à un objectif défini dans l'introduction.",
+    category: 'Présentation'
+  },
+  {
+    id: 'kpi-examples',
+    title: 'Exemples KPI',
+    content: "Méca (Résistance N/m²), Info (Latence ms, CPU %), Gestion (ROI €, NPS), Réseau (Jitter ms).",
+    category: 'Présentation'
+  },
+  {
+    id: 'res-sheet',
+    title: 'Fiche Résultat',
+    content: "Adoptez ce standard pour chaque test. Ça montre une rigueur scientifique impeccable.",
+    category: 'Présentation'
+  },
+  {
+    id: 'fig-bp',
+    title: 'Figures Orphelines',
+    content: "Ne jamais mettre une figure sans la citer dans le texte ('cf. Figure 3'). Si elle n'est pas citée, elle n'existe pas.",
+    category: 'Rédaction'
+  },
+  {
+    id: 'fig-comment',
+    title: 'Annonce-Obs-Lien',
+    content: "La méthode infaillible : 1. Dites ce qu'on voit. 2. Décrivez l'évolution. 3. Concluez sur l'objectif.",
+    category: 'Rédaction'
+  },
+  {
+    id: 'tab-synth',
+    title: 'Synthèse',
+    content: "Si le jury ne lit qu'une page de la partie 3, c'est celle-ci. Soignez ce tableau.",
+    category: 'Présentation'
+  },
+  {
+    id: 'val-proto',
+    title: 'Protocole',
+    content: "N'importe qui doit pouvoir refaire votre test en lisant cette section. Précisez l'OS, la RAM, la version des libs.",
+    category: 'Analyse'
+  },
+  {
+    id: 'val-tools',
+    title: 'Outils',
+    content: "JMeter pour la charge, Selenium pour l'UI, Wireshark pour le réseau, TensorBoard pour l'IA.",
+    category: 'Analyse'
+  },
+  {
+    id: 'ana-quant',
+    title: 'Statistiques',
+    content: "Une moyenne seule est trompeuse. Donnez toujours l'écart-type ou les min/max pour montrer la stabilité.",
+    category: 'Analyse'
+  },
+  {
+    id: 'ana-qual',
+    title: 'Verbatim',
+    content: "Pour les tests utilisateurs, citez des phrases réelles : 'Je ne comprends pas ce bouton'. C'est très impactant.",
+    category: 'Analyse'
+  },
+  {
+    id: 'ana-why',
+    title: 'Causalité',
+    content: "Ne soyez pas un spectateur. Vous êtes l'ingénieur. Trouvez la cause racine (Root Cause Analysis).",
+    category: 'Analyse'
+  },
+  {
+    id: 'disc-comp',
+    title: 'Comparaison',
+    content: "Si vous n'avez pas de point de comparaison (état de l'art ou existant), votre résultat est orphelin.",
+    category: 'Discussion'
+  },
+  {
+    id: 'disc-limits',
+    title: 'Limites',
+    content: "C'est la section 'Honnêteté'. Avouer que le dataset est petit ne vous pénalisera pas. Le cacher, si.",
+    category: 'Discussion'
+  },
+  {
+    id: 'disc-future',
+    title: 'Futur',
+    content: "Montrez que le projet ne s'arrête pas à votre départ. Donnez la roadmap au prochain stagiaire.",
+    category: 'Discussion'
+  },
+  {
+    id: 'style-acad',
+    title: 'Ton Neutre',
+    content: "Bannissez les 'Je pense', 'Il semble', 'Malheureusement'. Utilisez 'On observe', 'Il apparaît', 'Cependant'.",
+    category: 'Rédaction'
+  },
+  {
+    id: 'style-errors',
+    title: 'Erreurs',
+    content: "Ne transformez pas la partie 3 en journal intime ('J'ai eu du mal à...'). Restez sur les faits techniques.",
+    category: 'Rédaction'
+  },
+  // --- CLÔTURE ---
+  {
+    id: 'conc-echo',
+    title: 'Boucle',
+    content: "Une bonne conclusion répond directement à la question posée en introduction. Lisez votre Intro avant d'écrire votre Conclusion.",
+    category: 'Conclusion'
+  },
+  {
+    id: 'conc-perso',
+    title: 'Apports',
+    content: "Le jury veut savoir ce que vous avez appris humainement. 'J'ai appris à gérer le stress', 'J'ai découvert le monde bancaire'.",
+    category: 'Conclusion'
+  },
+  {
+    id: 'biblio-norm',
+    title: 'Norme Zotero',
+    content: "utilisez un outil (Zotero, Mendeley) pour générer la bibliographie. Ne le faites jamais à la main.",
+    category: 'Bibliographie'
+  },
+  {
+    id: 'biblio-link',
+    title: 'Liens',
+    content: "Rien n'est pire qu'un lien 'File Not Found'. Vérifiez-les tous la veille du dépôt.",
+    category: 'Bibliographie'
+  },
+  {
+    id: 'annex-content',
+    title: 'Volume',
+    content: "L'annexe n'est pas une poubelle. N'y mettez que des documents de valeur cités dans le texte.",
+    category: 'Annexes'
+  },
+  {
+    id: 'annex-ref',
+    title: 'Lien',
+    content: "Si vous mettez une annexe, le rapport doit dire 'Voir Annexe A'. Sinon le jury ne la lira jamais.",
+    category: 'Annexes'
+  },
+  {
+    id: 'nop-conc',
+    title: 'Conclusion',
+    content: "Fermez la boucle. Rappelez la problématique et dites clairement si elle est résolue.",
+    category: 'Conclusion'
   },
 ]

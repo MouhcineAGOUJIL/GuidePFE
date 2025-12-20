@@ -13,5 +13,7 @@ def extract_text(pdf_path):
 
 if __name__ == "__main__":
     # Guide PFE Parte 1
-    print("--- GUIDE PFE PARTIE 1 ---")
-    print(extract_text("public/content/Guide PFE Partie 1.pdf"))
+    print("--- GUIDE PFE PARTIE 2 ---")
+    print(extract_text("public/content/Guide PFE Partie 2.pdf"))
+    print("\n--- GUIDE PFE PARTIE 3 ---")
+    print(extract_text("public/content/Guide PFE Partie 3.pdf"))

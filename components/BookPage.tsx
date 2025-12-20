@@ -8,6 +8,7 @@ interface DetailLink {
   position?: number
 }
 
+// Update interface at top of file
 interface BookPageProps {
   page: {
     title: string
@@ -15,6 +16,7 @@ interface BookPageProps {
     details?: DetailLink[]
     image?: string
     imageCaption?: string
+    isTitlePage?: boolean
   }
   onDetailClick: (detailId: string) => void
   pageNumber: number
@@ -23,66 +25,119 @@ interface BookPageProps {
 
 const BookPage = forwardRef<HTMLDivElement, BookPageProps>(({ page, onDetailClick, pageNumber, totalPages }, ref) => {
   const renderContent = () => {
-    // ... existing content logic ...
+    // ... existing renderContent logic stays same ...
+    if (page.content instanceof Array) return page.content
+
     if (typeof page.content === 'string') {
-      // Split content by paragraphs first if detectable, or just handle line breaks
-      // The requirement is mostly about the list in Introduction being "one line per chapter"
-      // which implies handling newlines.
-
-      const renderPart = (text: string, keyPrefix: string) => {
-        // Split by newlines and render with <br/>
-        return text.split('\n').map((line, i, arr) => (
-          <span key={`${keyPrefix}-${i}`}>
-            {line}
-            {i < arr.length - 1 && <br />}
-          </span>
-        ))
+      const renderWithDetails = (text: string, key: string) => {
+        if (!page.details || page.details.length === 0) return text
+        // ... existing details logic ...
+        let segments: (string | ReactNode)[] = [text]
+        page.details.forEach(detail => {
+          const nextSegments: (string | ReactNode)[] = []
+          segments.forEach(seg => {
+            if (typeof seg === 'string') {
+              const parts = seg.split(detail.text)
+              parts.forEach((p, k) => {
+                if (p) nextSegments.push(p)
+                if (k < parts.length - 1) {
+                  nextSegments.push(
+                    <button
+                      key={`${key}-${detail.id}-${k}`}
+                      onClick={() => onDetailClick(detail.id)}
+                      className="text-primary-600 underline decoration-primary-300 hover:text-primary-800 hover:bg-primary-50 px-1 -mx-1 rounded transition-all font-medium cursor-pointer"
+                    >
+                      {detail.text}
+                    </button>
+                  )
+                }
+              })
+            } else {
+              nextSegments.push(seg)
+            }
+          })
+          segments = nextSegments
+        })
+        return <>{segments}</>
       }
 
-      if (page.details && page.details.length > 0) {
-        const parts: (string | DetailLink)[] = []
-        let lastIndex = 0
-        let content = page.content
-
-        page.details.forEach((detail) => {
-          const position = detail.position || content.indexOf(detail.text)
-          if (position !== -1) {
-            parts.push(content.slice(lastIndex, position))
-            parts.push(detail)
-            lastIndex = position + detail.text.length
+      const renderInline = (text: string, keyPrefix: string) => {
+        // ... existing inline logic ...
+        const parts = text.split(/(\*\*.*?\*\*)/g)
+        return parts.map((part, i) => {
+          if (part.startsWith('**') && part.endsWith('**')) {
+            return <strong key={`${keyPrefix}-${i}`} className="font-bold text-gray-900">{renderWithDetails(part.slice(2, -2), `${keyPrefix}-${i}-b`)}</strong>
           }
-        })
-        parts.push(content.slice(lastIndex))
-
-        return parts.map((part, index) => {
-          if (typeof part === 'string') {
-            return <span key={index}>{renderPart(part, `text-${index}`)}</span>
-          } else {
-            return (
-              <button
-                key={index}
-                onClick={() => onDetailClick(part.id)}
-                className="text-primary-600 underline decoration-primary-300 hover:text-primary-800 hover:bg-primary-50 px-1 -mx-1 rounded transition-all font-medium cursor-pointer"
-              >
-                {part.text}
-              </button>
-            )
-          }
+          return <span key={`${keyPrefix}-${i}`}>{renderWithDetails(part, `${keyPrefix}-${i}`)}</span>
         })
       }
-      // If no details, just render the content with line breaks
-      return page.content.split('\n').map((line, i) => (
-        <span key={i}>
-          {line}
-          <br />
-        </span>
-      ))
+
+      const lines = page.content.split('\n')
+      return (
+        <div className="space-y-1">
+          {lines.map((line, i) => {
+            // ... existing line parsing ...
+            const trimmed = line.trim()
+            if (trimmed === '') return <br key={i} className="block content-[''] h-4" />
+
+            if (line.startsWith('### ')) {
+              return <h3 key={i} className="text-lg font-bold text-primary-700 mt-4 mb-2">{renderInline(line.slice(4), `l-${i}`)}</h3>
+            }
+            if (line.startsWith('## ')) {
+              return <h2 key={i} className="text-xl font-bold text-primary-800 mt-6 mb-3 border-l-4 border-primary-400 pl-3 bg-gray-50 p-2 rounded-r">{renderInline(line.slice(3), `l-${i}`)}</h2>
+            }
+            if (trimmed.startsWith('- ')) {
+              return (
+                <div key={i} className="flex flex-row items-start mb-2 ml-4">
+                  <div className="min-w-[8px] h-2 w-2 rounded-full bg-primary-400 mt-2 mr-3 opacity-80"></div>
+                  <div className="text-gray-700 leading-relaxed">{renderInline(trimmed.slice(2), `l-${i}`)}</div>
+                </div>
+              )
+            }
+            if (trimmed.startsWith('> ')) {
+              return (
+                <div key={i} className="bg-blue-50 border-l-4 border-blue-400 p-4 my-4 text-blue-800 italic rounded-r">
+                  {renderInline(trimmed.slice(2), `l-${i}`)}
+                </div>
+              )
+            }
+
+            return <p key={i} className="leading-relaxed text-gray-700 mb-2">{renderInline(line, `l-${i}`)}</p>
+          })}
+        </div>
+      )
     }
     return page.content
   }
 
+  // SPECIAL LAYOUT FOR TITLE PAGES
+  if (page.isTitlePage) {
+    return (
+      <div ref={ref} className="bg-white h-full w-full p-12 shadow-sm relative overflow-hidden flex flex-col justify-center items-center text-center">
+        {/* Paper texture overlay */}
+        <div className="absolute inset-0 pointer-events-none opacity-[0.03] bg-[url('https://www.transparenttextures.com/patterns/paper.png')]"></div>
+        {/* Decorative Border */}
+        <div className="absolute inset-8 border-4 double border-primary-100 opacity-50 pointer-events-none"></div>
+
+        <div className="relative z-10 max-w-lg">
+          <h1 className="text-6xl font-serif font-bold text-primary-900 mb-6 tracking-widest uppercase">
+            {page.title.split(':')[0]}
+          </h1>
+          <div className="h-1 w-32 bg-primary-500 mx-auto mb-8"></div>
+          <h2 className="text-3xl font-serif text-gray-700 italic leading-relaxed">
+            {page.title.split(':')[1] || page.content}
+          </h2>
+        </div>
+
+        <div className="mt-auto absolute bottom-12 text-sm text-gray-400 font-mono">
+          Guide PFE &mdash; {page.title.split(':')[0]}
+        </div>
+      </div>
+    )
+  }
+
   return (
-    <div ref={ref} className="bg-white h-full w-full p-8 md:p-12 shadow-sm border-r border-gray-100 relative overflow-hidden">
+    <div ref={ref} className="bg-white h-full w-full p-8 md:p-12 shadow-sm relative overflow-hidden">
       {/* Paper texture overlay */}
       <div className="absolute inset-0 pointer-events-none opacity-[0.03] bg-[url('https://www.transparenttextures.com/patterns/paper.png')]"></div>
 
@@ -119,4 +174,3 @@ const BookPage = forwardRef<HTMLDivElement, BookPageProps>(({ page, onDetailClic
 BookPage.displayName = 'BookPage'
 
 export default BookPage
-

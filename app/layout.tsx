@@ -4,6 +4,9 @@ import './globals.css'
 export const metadata: Metadata = {
   title: 'Guide PFE - Rapport de Projet de Fin d\'Études',
   description: 'Guide complet pour la rédaction de votre rapport PFE',
+  icons: {
+    icon: '/images/logo.png',
+  },
 }
 
 export default function RootLayout({

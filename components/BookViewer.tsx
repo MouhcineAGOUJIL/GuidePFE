@@ -49,6 +49,35 @@ export default function BookViewer() {
     setCurrentPage(e.data)
   }
 
+  const handlePageInput = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const input = e.currentTarget.elements.namedItem('pageInput') as HTMLInputElement
+    let page = parseInt(input.value)
+
+    if (!isNaN(page)) {
+      // Ensure page is within bounds (1 to totalPages)
+      page = Math.max(1, Math.min(page, totalPages))
+
+      if (bookRef.current) {
+        // react-pageflip uses 0-based index
+        // We know the first page is cover (index 0), then content starts.
+        // But totalPages calculation included cover? Let's check.
+        // Actually, reportPages.length is what we used for totalPages.
+        // The flipbook renders cover first (index 0), then reportPages map (index 1 to N).
+        // So visually Page 1 (content) is actually index 1 of the book array?
+        // Wait, Cover is index 0. reportPages[0] is index 1.
+        // Users usually think Page 1 is the first content page.
+        // Let's assume User Page 1 = Book Index 1. User Page 0 or Cover = Book Index 0.
+        // Visual page number is index in reportPages + 1.
+
+        // If user enters '1', they want reportPages[0], which is at book index 1.
+        // If user enters '0', maybe they want cover at book index 0.
+
+        bookRef.current.pageFlip().flip(page)
+      }
+    }
+  }
+
   return (
     <div className="relative w-full h-screen flex flex-col items-center justify-center bg-gray-100 overflow-hidden">
       {/* Background Ambience */}
@@ -75,10 +104,20 @@ export default function BookViewer() {
           <ChevronLeft className="w-6 h-6 text-gray-700" />
         </button>
 
-        <div className="flex items-center gap-2 px-2 font-mono text-gray-600">
+        <form onSubmit={handlePageInput} className="flex items-center gap-2 px-2 font-mono text-gray-600">
           <BookOpen className="w-5 h-5" />
-          <span>Page {currentPage + 1} / {totalPages}</span>
-        </div>
+          <span className="whitespace-nowrap">Page</span>
+          <input
+            name="pageInput"
+            type="number"
+            min="0"
+            max={totalPages}
+            defaultValue={currentPage}
+            key={currentPage} // Force re-render on page change to update value
+            className="w-12 text-center border-b border-gray-400 bg-transparent focus:outline-none focus:border-primary-600"
+          />
+          <span className="whitespace-nowrap">/ {totalPages}</span>
+        </form>
 
         <button
           onClick={handleNextPage}

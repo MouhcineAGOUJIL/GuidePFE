@@ -1,13 +1,16 @@
-'use client'
-
-import { motion } from 'framer-motion'
-import { BookOpen, Target, Lightbulb, ChevronRight, User, CheckCircle, ArrowRight, Github, Twitter, Linkedin } from 'lucide-react'
+import { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { BookOpen, Target, Lightbulb, ChevronRight, User, CheckCircle, ArrowRight, Github, Twitter, Linkedin, BrainCircuit, Code2, Presentation, Rocket, X, Quote } from 'lucide-react'
+import ReactMarkdown from 'react-markdown'
+import { advicePhases } from '@/data/advice'
 
 interface LandingPageProps {
     onStart: () => void
 }
 
 export default function LandingPage({ onStart }: LandingPageProps) {
+    const [activePhase, setActivePhase] = useState<string | null>(null)
+
     const fadeInUp = {
         hidden: { opacity: 0, y: 20 },
         visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
@@ -17,6 +20,17 @@ export default function LandingPage({ onStart }: LandingPageProps) {
         visible: { transition: { staggerChildren: 0.1 } }
     }
 
+    // Helper to get icon component
+    const getIcon = (name: string) => {
+        switch (name) {
+            case 'BrainCircuit': return <BrainCircuit size={32} />;
+            case 'Code2': return <Code2 size={32} />;
+            case 'Presentation': return <Presentation size={32} />;
+            case 'Rocket': return <Rocket size={32} />;
+            default: return <Lightbulb size={32} />;
+        }
+    }
+
     return (
         <div className="min-h-screen bg-slate-50 text-slate-900 font-sans selection:bg-primary-200 selection:text-primary-900">
 
@@ -24,17 +38,14 @@ export default function LandingPage({ onStart }: LandingPageProps) {
             <header className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-slate-200">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                        <div className="bg-primary-600 p-2 rounded-lg text-white">
-                            <BookOpen size={24} />
-                        </div>
-                        <span className="text-xl font-bold text-slate-900 tracking-tight">Guide PFE Master</span>
+                        <img src="/images/logo.png" alt="Logo Guide PFE" className="w-10 h-10 object-contain bg-white rounded-lg p-1" />
+                        <span className="text-xl font-bold text-slate-900 tracking-tight">Guide PFE</span>
                     </div>
 
                     <nav className="hidden md:flex gap-8 text-sm font-medium text-slate-600">
                         <a href="#hero" className="hover:text-primary-600 transition-colors">Accueil</a>
                         <a href="#features" className="hover:text-primary-600 transition-colors">Le Guide</a>
-                        <a href="#preview" className="hover:text-primary-600 transition-colors">Aperçu</a>
-                        <a href="#stats" className="hover:text-primary-600 transition-colors">Témoignages</a>
+                        <a href="#advice" className="hover:text-primary-600 transition-colors">Conseils</a>
                     </nav>
 
                     <button
@@ -52,6 +63,7 @@ export default function LandingPage({ onStart }: LandingPageProps) {
                     <div className="absolute top-0 inset-x-0 h-[500px] bg-gradient-to-b from-blue-50 to-transparent pointer-events-none"></div>
 
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative grid lg:grid-cols-2 gap-12 items-center">
+                        {/* Hero Content - Text (Left) */}
                         <motion.div
                             initial="hidden"
                             whileInView="visible"
@@ -64,7 +76,7 @@ export default function LandingPage({ onStart }: LandingPageProps) {
                                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-400 opacity-75"></span>
                                     <span className="relative inline-flex rounded-full h-2 w-2 bg-primary-500"></span>
                                 </span>
-                                Nouveau Guide 2024
+                                Nouveau Guide 2025
                             </motion.div>
 
                             <motion.h1 variants={fadeInUp} className="text-5xl lg:text-6xl font-extrabold text-slate-900 leading-[1.1] tracking-tight">
@@ -84,10 +96,10 @@ export default function LandingPage({ onStart }: LandingPageProps) {
                                     <ChevronRight size={20} className="group-hover:translate-x-1 transition-transform" />
                                 </button>
                                 <a
-                                    href="#preview"
+                                    href="#advice"
                                     className="px-8 py-4 rounded-full font-bold text-lg text-slate-600 hover:text-slate-900 border border-slate-200 hover:border-slate-300 bg-white transition-all flex items-center justify-center"
                                 >
-                                    Voir la démo
+                                    Lire les Conseils
                                 </a>
                             </motion.div>
                         </motion.div>
@@ -97,7 +109,8 @@ export default function LandingPage({ onStart }: LandingPageProps) {
                             initial={{ x: 100, opacity: 0 }}
                             whileInView={{ x: 0, opacity: 1 }}
                             transition={{ duration: 0.8 }}
-                            className="relative hidden lg:block perspective-1000"
+                            onClick={onStart}
+                            className="relative hidden lg:block perspective-1000 cursor-pointer group"
                         >
                             <div className="relative w-[450px] aspect-[3/4] mx-auto transform rotate-y-[-12deg] rotate-x-[5deg] shadow-2xl rounded-r-xl bg-white border-l-8 border-slate-200">
                                 <div className="absolute inset-0 bg-gradient-to-r from-slate-100 to-white rounded-r-xl overflow-hidden flex flex-col items-center justify-center p-8 border border-slate-100">
@@ -173,61 +186,144 @@ export default function LandingPage({ onStart }: LandingPageProps) {
                     </div>
                 </section>
 
-                {/* 4. Users / Stats Section */}
-                <section id="stats" className="py-24 bg-slate-900 text-white relative overflow-hidden">
-                    <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+                {/* 4. Advice Section (Interactive Cards) */}
+                <section id="advice" className="py-24 bg-slate-50 relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-1/3 h-full bg-slate-100/50 skew-x-12 transform translate-x-20 pointer-events-none"></div>
+
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-                        <div className="grid md:grid-cols-2 gap-16 items-center">
-                            <div>
-                                <h3 className="text-3xl font-bold mb-6">Approuvé par la communauté étudiante</h3>
-                                <p className="text-slate-300 text-lg mb-8">
-                                    Ne perdez plus de temps à chercher des exemples dispersés. Notre guide centralise les meilleures pratiques utilisées par les majors de promotion.
-                                </p>
-
-                                <div className="flex items-center gap-4 mb-8">
-                                    <div className="flex -space-x-4">
-                                        {[1, 2, 3, 4].map((i) => (
-                                            <div key={i} className="w-12 h-12 rounded-full border-4 border-slate-900 bg-slate-700 flex items-center justify-center text-xs font-bold">
-                                                <User size={20} />
-                                            </div>
-                                        ))}
-                                    </div>
-                                    <div>
-                                        <div className="font-bold text-xl">500+</div>
-                                        <div className="text-slate-400 text-sm">Étudiants guidés</div>
-                                    </div>
-                                </div>
-
-                                <div className="flex flex-wrap gap-4">
-                                    {["97% Satisfaction", "30+ Sections", "100% Gratuit"].map((tag, i) => (
-                                        <div key={i} className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-lg backdrop-blur-sm">
-                                            <CheckCircle size={16} className="text-green-400" />
-                                            <span className="font-medium">{tag}</span>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-
-                            <div className="bg-white/5 p-8 rounded-2xl border border-white/10 backdrop-blur-md">
-                                <div className="flex gap-4 mb-6">
-                                    <div className="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center font-bold text-xl">S</div>
-                                    <div>
-                                        <div className="font-bold">Sarah M.</div>
-                                        <div className="text-sm text-slate-400">Master MIAGE</div>
-                                    </div>
-                                </div>
-                                <p className="text-lg italic text-slate-200">
-                                    "L'interface livre est géniale ! C'est beaucoup plus engageant qu'un simple PDF. Les annotations contextuelles m'ont vraiment aidé à comprendre ce qu'on attendait de moi pour la partie méthodologie."
-                                </p>
-                                <div className="flex gap-1 mt-4 text-amber-400">
-                                    {"★★★★★".split('').map((star, i) => <span key={i}>{star}</span>)}
-                                </div>
-                            </div>
+                        <div className="text-center mb-16">
+                            <h2 className="text-primary-600 font-semibold tracking-wide uppercase mb-3">Méthodologie & Conseils</h2>
+                            <h3 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6">Le Cycle de Vie du PFE</h3>
+                            <p className="text-xl text-slate-600 max-w-2xl mx-auto">
+                                Chaque étape est cruciale. Cliquez sur une phase pour découvrir les clés de la réussite.
+                            </p>
                         </div>
+
+                        {/* Interactive Grid */}
+                        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                            {advicePhases.map((phase, idx) => (
+                                <motion.div
+                                    key={phase.id}
+                                    initial={{ opacity: 0, y: 20 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: idx * 0.1 }}
+                                    viewport={{ once: true }}
+                                    onClick={() => setActivePhase(phase.id)}
+                                    className={`cursor-pointer rounded-2xl p-6 bg-white border border-slate-200 hover:border-primary-300 shadow-sm hover:shadow-xl transition-all group ${activePhase === phase.id ? 'ring-2 ring-primary-500 shadow-primary-500/20' : ''}`}
+                                >
+                                    <div className={`w-12 h-12 ${phase.color} text-white rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
+                                        {getIcon(phase.icon)}
+                                    </div>
+                                    <h4 className="text-lg font-bold text-slate-900 mb-1">{phase.title}</h4>
+                                    <p className="text-sm text-slate-500 font-medium">{phase.subtitle}</p>
+                                    <div className="mt-4 flex items-center text-primary-600 text-sm font-semibold opacity-0 group-hover:opacity-100 transition-opacity translate-y-2 group-hover:translate-y-0">
+                                        Lire les conseils <ArrowRight size={14} className="ml-1" />
+                                    </div>
+                                </motion.div>
+                            ))}
+                        </div>
+
+                        {/* Detailed View Area */}
+                        <AnimatePresence mode="wait">
+                            {activePhase && (
+                                <motion.div
+                                    key={activePhase}
+                                    initial={{ opacity: 0, height: 0 }}
+                                    animate={{ opacity: 1, height: 'auto' }}
+                                    exit={{ opacity: 0, height: 0 }}
+                                    transition={{ duration: 0.4 }}
+                                    className="overflow-hidden mt-8"
+                                >
+                                    <div className="bg-white rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-100 p-8 md:p-12 relative">
+
+                                        <button
+                                            onClick={() => setActivePhase(null)}
+                                            className="absolute top-6 right-6 p-2 rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-colors"
+                                        >
+                                            <X size={24} />
+                                        </button>
+
+                                        <div className="flex items-center gap-4 mb-8">
+                                            <div className={`w-14 h-14 ${advicePhases.find(p => p.id === activePhase)?.color} text-white rounded-xl flex items-center justify-center shadow-lg`}>
+                                                {getIcon(advicePhases.find(p => p.id === activePhase)?.icon || '')}
+                                            </div>
+                                            <div>
+                                                <h3 className="text-3xl font-bold text-slate-900">{advicePhases.find(p => p.id === activePhase)?.title}</h3>
+                                                <p className="text-slate-500 text-lg">{advicePhases.find(p => p.id === activePhase)?.subtitle}</p>
+                                            </div>
+                                        </div>
+
+                                        <div className="mt-8">
+                                            <ReactMarkdown
+                                                components={{
+                                                    h2: ({ children }) => {
+                                                        const text = children?.toString() || '';
+                                                        const isStep = /^\d+\./.test(text);
+                                                        return (
+                                                            <div className="flex items-start gap-4 mt-10 mb-6 group">
+                                                                {isStep && (
+                                                                    <div className="flex-shrink-0 w-12 h-12 rounded-2xl bg-gradient-to-br from-primary-500 to-primary-600 text-white flex items-center justify-center font-bold text-xl shadow-lg group-hover:scale-110 transition-transform duration-300">
+                                                                        {text.split('.')[0]}
+                                                                    </div>
+                                                                )}
+                                                                <h2 className="text-2xl font-bold text-slate-800 pt-2 relative">
+                                                                    {isStep ? text.replace(/^\d+\.\s*/, '') : children}
+                                                                    <span className="absolute -bottom-2 left-0 w-12 h-1 bg-primary-500 rounded-full opacity-30"></span>
+                                                                </h2>
+                                                            </div>
+                                                        );
+                                                    },
+                                                    h3: ({ children }) => (
+                                                        <h3 className="text-xl font-semibold text-primary-700 mt-8 mb-4 flex items-center gap-2">
+                                                            <div className="w-2 h-2 rounded-full bg-primary-400" />
+                                                            {children}
+                                                        </h3>
+                                                    ),
+                                                    p: ({ children }) => (
+                                                        <p className="text-slate-600 leading-relaxed mb-4 text-lg">
+                                                            {children}
+                                                        </p>
+                                                    ),
+                                                    ul: ({ children }) => (
+                                                        <ul className="space-y-3 mb-6 ml-2">
+                                                            {children}
+                                                        </ul>
+                                                    ),
+                                                    li: ({ children }) => (
+                                                        <li className="flex items-start gap-3 text-slate-700">
+                                                            <div className="flex-shrink-0 w-1.5 h-1.5 rounded-full bg-primary-400 mt-2.5" />
+                                                            <span className="flex-1">{children}</span>
+                                                        </li>
+                                                    ),
+                                                    blockquote: ({ children }) => (
+                                                        <div className="my-8 relative overflow-hidden rounded-xl bg-gradient-to-r from-blue-50 to-indigo-50 border-l-4 border-primary-500 p-6 shadow-sm">
+                                                            <div className="absolute top-0 right-0 opacity-10 transform translate-x-1/3 -translate-y-1/3">
+                                                                <Quote className="w-32 h-32 text-primary-600" />
+                                                            </div>
+                                                            <div className="relative z-10 font-medium text-slate-800 italic">
+                                                                {children}
+                                                            </div>
+                                                        </div>
+                                                    ),
+                                                    strong: ({ children }) => (
+                                                        <strong className="font-bold text-primary-700 bg-primary-50 px-1 rounded">
+                                                            {children}
+                                                        </strong>
+                                                    ),
+                                                }}
+                                            >
+                                                {advicePhases.find(p => p.id === activePhase)?.content || ''}
+                                            </ReactMarkdown>
+                                        </div>
+                                    </div>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
                     </div>
                 </section>
 
-                {/* 5. Preview / CTA Section */}
+
+                {/* 6. Preview / CTA Section */}
                 <section id="preview" className="py-24 bg-gradient-to-br from-blue-50 to-indigo-50 text-center">
                     <div className="max-w-4xl mx-auto px-4">
                         <h2 className="text-4xl font-bold text-slate-900 mb-6">Prêt à perfectionner votre rapport ?</h2>
@@ -256,7 +352,7 @@ export default function LandingPage({ onStart }: LandingPageProps) {
                 </section>
             </main>
 
-            {/* 6. Footer */}
+            {/* 7. Footer */}
             <footer className="bg-white border-t border-slate-200 py-12">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6">
                     <div className="flex items-center gap-2">
@@ -267,7 +363,7 @@ export default function LandingPage({ onStart }: LandingPageProps) {
                     </div>
 
                     <div className="text-slate-500 text-sm">
-                        © 2024 Département Informatique. Tous droits réservés.
+                        © 2025 Département Informatique. Tous droits réservés.
                     </div>
 
                     <div className="flex gap-6">
