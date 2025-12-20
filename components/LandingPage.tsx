@@ -38,7 +38,7 @@ export default function LandingPage({ onStart }: LandingPageProps) {
             <header className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-slate-200">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                        <img src="/content/logo.svg" alt="Logo Guide PFE" className="w-14 h-14 object-contain bg-white rounded-lg p-1" />
+                        <img src="/images/logo.svg" alt="Logo Guide PFE" className="w-14 h-14 object-contain bg-white rounded-lg p-1" />
                         <span className="text-xl font-bold text-slate-900 tracking-tight">Guide PFE</span>
                     </div>
 
@@ -356,7 +356,7 @@ export default function LandingPage({ onStart }: LandingPageProps) {
             <footer className="bg-white border-t border-slate-200 py-12">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6">
                     <div className="flex items-center gap-2">
-                        <img src="/content/logo.svg" alt="Logo Guide PFE" className="w-8 h-8 object-contain" />
+                        <img src="/images/logo.svg" alt="Logo Guide PFE" className="w-8 h-8 object-contain" />
                         <span className="font-bold text-slate-900">Guide PFE</span>
                     </div>
 

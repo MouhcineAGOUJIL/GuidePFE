@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   title: 'Guide PFE - Rapport de Projet de Fin d\'Études',
   description: 'Guide complet pour la rédaction de votre rapport PFE',
   icons: {
-    icon: '/content/logo.svg',
+    icon: '/images/logo.svg',
   },
 }
 
