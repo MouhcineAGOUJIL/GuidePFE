@@ -139,7 +139,7 @@ export default function BookViewer() {
       </AnimatePresence>
 
       {/* Controls Header */}
-      <div className="absolute top-4 z-20 flex items-center gap-4 bg-white/80 backdrop-blur-md p-3 rounded-full shadow-lg border border-white/50">
+      <div className="absolute top-2 z-50 flex items-center gap-4 bg-white/90 backdrop-blur-md p-2 rounded-full shadow-xl border border-white/50 scale-75 origin-top">
         <button
           onClick={handlePrevPage}
           className="p-2 rounded-full hover:bg-gray-100 transition-colors disabled:opacity-50"
